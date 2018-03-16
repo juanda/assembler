@@ -1,4 +1,4 @@
 import { Parser } from './Parser';
-var p = new Parser();
-console.log(p.hasMoreCommands())
-console.log("hola");
+var p = new Parser(__dirname + '/../src/prueba.asm');
+p.loadInputFile();
+

@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
-    "run": "tsc && node dist/index.js",
-    "test": "tsc && mocha dist/**/*.spec.js",
+    "start": "tsc && node dist/index.js",  
+    "test": "tsc tests/*.ts --outDir tests/dist && mocha tests/dist/**/*.spec.js",
     "build": "tsc"
   },
   "author": "",
