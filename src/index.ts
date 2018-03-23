@@ -1,3 +1,4 @@
+import { writeFileSync } from 'fs';
 import { Parser, CommandType } from './Parser';
 import { Code } from './Code';
 import { Util } from './Util';
@@ -30,5 +31,12 @@ while (p.hasMoreCommands()) {
 }
 
 console.log(out);
+
+let codeStr = "";
+out.forEach(element => {
+    codeStr += element + "\n";
+});
+
+writeFileSync(__dirname + '/../file.hack', codeStr);
 
 
