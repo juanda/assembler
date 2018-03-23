@@ -11,7 +11,7 @@ describe('Code tests', () => {
 
     it('generate dest', () => {       
 
-        ok(code.dest(null) == "000");
+        ok(code.dest("") == "000");
         ok(code.dest("M") == "001");
         ok(code.dest("D") == "010");
         ok(code.dest("MD") == "011");
@@ -22,7 +22,7 @@ describe('Code tests', () => {
     });
 
     it('generate jump', () => {
-        ok(code.jump(null) == "000");
+        ok(code.jump("") == "000");
         ok(code.jump("JGT") == "001");
         ok(code.jump("JEQ") == "010");
         ok(code.jump("JGE") == "011");

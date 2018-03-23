@@ -73,14 +73,24 @@ export class Parser {
 
     // si hay dest hay signo = en la expresión
     dest(): string {
-        let splitted = this.currentCommand.split("=");
-        return splitted[0];
+        let op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
+        let splitted = this.currentCommand.split(op);
+        if(op == "="){
+            return splitted[0];
+        }else{
+            return "";
+        }
     }
 
     // si hay jump, hay signo ; en la expresión
     jump(): string {
-        let splitted = this.currentCommand.split(";");
-        return splitted.pop();
+        let op = (this.currentCommand.indexOf(";") != -1) ? ";" : "=";
+        let splitted = this.currentCommand.split(op);
+        if(op == ";"){            
+            return splitted.pop();
+        }else{
+            return "";
+        }
     }
 
     comp(): string {

@@ -3,7 +3,7 @@ export class Code {
     dest(mnemonic: string): string {
 
         let dests = {
-            "null": "000",
+            "": "000",
             "M": "001",
             "D": "010",
             "MD": "011",
@@ -54,7 +54,7 @@ export class Code {
 
     jump(mnemonic: string): string {
         let jumps = {
-            "null": "000",
+            "": "000",
             "JGT": "001",
             "JEQ": "010",
             "JGE": "011",

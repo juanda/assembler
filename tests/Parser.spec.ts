@@ -96,17 +96,19 @@ describe('Parser tests', () => {
         ok(parser.loadInputFile(filePath));
 
         parser.advance();
-        ok(parser.symbol() == 'i', parser.symbol() + ' debería ser "i"');
+        ok(parser.symbol() == 'i', '1) ' + parser.symbol() + ' debería ser "i"');
         parser.advance();
-        ok(parser.dest() == 'M', parser.dest() + ' debería ser "M"');
-        ok(parser.comp() == '1', parser.comp() + ' debería ser "1"');
+        ok(parser.dest() == 'M', '2) ' + parser.dest() + ' debería ser "M"');
+        ok(parser.comp() == '1', '3) ' + parser.comp() + ' debería ser "1"');
+        ok(parser.jump() == '', '4) ' + parser.comp() + ' debería ser una cadena vacía')
         parser.advance();
-        ok(parser.jump() == 'JMP', parser.jump() + ' debería ser "JMP"');
-        ok(parser.comp() == '0', parser.comp() + ' debería ser "0"');
+        ok(parser.dest() == '', '5) ' + parser.dest() + ' debería ser una cadena vacía')
+        ok(parser.jump() == 'JMP', '6) ' + parser.jump() + ' debería ser "JMP"');
+        ok(parser.comp() == '0', '7) ' + parser.comp() + ' debería ser "0"');
         parser.advance();
-        ok(parser.dest() == 'D', parser.dest() + ' debería ser "D"')
-        ok(parser.jump() == 'JGT', parser.jump() + ' debería ser "JGT"');
-        ok(parser.comp() == '3', parser.comp() + ' debería ser "3"');
+        ok(parser.dest() == 'D', '8) ' + parser.dest() + ' debería ser "D"')
+        ok(parser.jump() == 'JGT', '9) ' + parser.jump() + ' debería ser "JGT"');
+        ok(parser.comp() == '3', '10) ' + parser.comp() + ' debería ser "3"');
 
     });
 });

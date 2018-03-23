@@ -64,13 +64,25 @@ var Parser = /** @class */ (function () {
     };
     // si hay dest hay signo = en la expresión
     Parser.prototype.dest = function () {
-        var splitted = this.currentCommand.split("=");
-        return splitted[0];
+        var op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
+        var splitted = this.currentCommand.split(op);
+        if (op == "=") {
+            return splitted[0];
+        }
+        else {
+            return "";
+        }
     };
     // si hay jump, hay signo ; en la expresión
     Parser.prototype.jump = function () {
-        var splitted = this.currentCommand.split(";");
-        return splitted.pop();
+        var op = (this.currentCommand.indexOf(";") != -1) ? ";" : "=";
+        var splitted = this.currentCommand.split(op);
+        if (op == ";") {
+            return splitted.pop();
+        }
+        else {
+            return "";
+        }
     };
     Parser.prototype.comp = function () {
         var op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
