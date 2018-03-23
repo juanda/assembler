@@ -9,8 +9,7 @@ var CommandType;
     CommandType[CommandType["Bad_COMMAND"] = 3] = "Bad_COMMAND";
 })(CommandType = exports.CommandType || (exports.CommandType = {}));
 var Parser = /** @class */ (function () {
-    function Parser(inputFilePath) {
-        this.inputFilePath = inputFilePath;
+    function Parser() {
     }
     Parser.prototype.cleanInputFileArray = function (dirty) {
         var clean = [];
@@ -22,9 +21,13 @@ var Parser = /** @class */ (function () {
                 clean.push(line);
             }
         }
+        // atención el array de comandos limpio está invertido,
+        // pero lo queremos así pues después lo iremos recorriendo
+        // con pop()
         return clean;
     };
-    Parser.prototype.loadInputFile = function () {
+    Parser.prototype.loadInputFile = function (inputFilePath) {
+        this.inputFilePath = inputFilePath;
         if (!fs_1.existsSync(this.inputFilePath))
             return false;
         var buffer = fs_1.readFileSync(this.inputFilePath, { encoding: 'utf8' });
@@ -52,18 +55,34 @@ var Parser = /** @class */ (function () {
                 return CommandType.C_COMMAND;
         }
     };
+    /////// Extracción de los tokens del comando //////
+    // el comando a parsear tiene la pinta dest=comp;jump
+    // donde dest=, o ;jump pueden no aparecer.
     Parser.prototype.symbol = function () {
-        return "hola";
+        var splitted = this.currentCommand.split("@");
+        return splitted[1];
     };
+    // si hay dest hay signo = en la expresión
     Parser.prototype.dest = function () {
-        return "hola";
+        var splitted = this.currentCommand.split("=");
+        return splitted[0];
+    };
+    // si hay jump, hay signo ; en la expresión
+    Parser.prototype.jump = function () {
+        var splitted = this.currentCommand.split(";");
+        return splitted.pop();
     };
     Parser.prototype.comp = function () {
-        return "Hola";
-    };
-    Parser.prototype.jump = function () {
-        return "Hola";
+        var op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
+        var splitted = this.currentCommand.split(op);
+        if (op == "=") {
+            return splitted[1].split(";")[0];
+        }
+        else {
+            return splitted[0];
+        }
     };
     return Parser;
 }());
 exports.Parser = Parser;
+//# sourceMappingURL=Parser.js.map

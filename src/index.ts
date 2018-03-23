@@ -1,6 +1,7 @@
 import { Parser } from './Parser';
-var p = new Parser(__dirname + '/../src/prueba.asm');
 
-p.loadInputFile();
-console.log();
+var p = new Parser();
+
+p.loadInputFile(__dirname + '/../src/prueba.asm');
+
 

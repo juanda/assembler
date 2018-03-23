@@ -13,17 +13,13 @@ export class Parser {
     private inputFilePath;
     private inputFileArray: string[];
     private currentCommand: string;
-
-    constructor(inputFilePath: string) {
-        this.inputFilePath = inputFilePath;
-    }
-
+    
     cleanInputFileArray(dirty: string[]): string[] {
         let clean: string[] = [];
         let len = dirty.length;
         for (let i = 0; i < len; i++) {
-            let line = dirty.pop().trim();      
-            let strippedLine = line.split(" ");      
+            let line = dirty.pop().trim();
+            let strippedLine = line.split(" ");
             if (["", "//"].indexOf(strippedLine[0]) == -1) {
                 clean.push(line);
             }
@@ -34,7 +30,8 @@ export class Parser {
         return clean;
     }
 
-    loadInputFile(): boolean {
+    loadInputFile(inputFilePath: string): boolean {
+        this.inputFilePath = inputFilePath;
         if (!existsSync(this.inputFilePath)) return false;
 
         let buffer: string = readFileSync(this.inputFilePath, { encoding: 'utf8' });
@@ -43,7 +40,7 @@ export class Parser {
         return true;
     }
 
-    hasMoreCommands(): boolean {        
+    hasMoreCommands(): boolean {
         return this.inputFileArray.length > 0;
     }
 
@@ -57,39 +54,46 @@ export class Parser {
         let firstChar = this.currentCommand.charAt(0);
         switch (firstChar) {
             case '@':
-                return CommandType.A_COMMAND;                
+                return CommandType.A_COMMAND;
             case '(':
-                return CommandType.L_COMMAND;                            
+                return CommandType.L_COMMAND;
             default:
                 return CommandType.C_COMMAND;
-        }        
+        }
     }
 
+    /////// Extracción de los tokens del comando //////
+    // el comando a parsear tiene la pinta dest=comp;jump
+    // donde dest=, o ;jump pueden no aparecer.
     symbol(): string {
         let splitted = this.currentCommand.split("@");
 
-        return splitted[0];
+        return splitted[1];
     }
 
+    // si hay dest hay signo = en la expresión
     dest(): string {
         let splitted = this.currentCommand.split("=");
         return splitted[0];
     }
 
-    comp(): string {
-        let op = (this.currentCommand.indexOf("=") != -1)? "=" : ";";
-        let splitted = this.currentCommand.split(op);
-        if(op == "="){
-            return splitted[1];
-        }else{
-            splitted.pop();
-            return splitted.pop();
-        }        
-    }
-
+    // si hay jump, hay signo ; en la expresión
     jump(): string {
         let splitted = this.currentCommand.split(";");
         return splitted.pop();
     }
+
+    comp(): string {
+        let op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
+        let splitted = this.currentCommand.split(op);
+        if(op == "="){
+            return splitted[1].split(";")[0];
+        }else{
+            return splitted[0];            
+        }
+        
+    }
+
+    
 
 }

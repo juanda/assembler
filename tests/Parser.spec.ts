@@ -2,12 +2,7 @@
 import {ok} from 'assert'
 import { Parser, CommandType } from '../src/Parser';
 
-describe('Parser tests', () => {
-    var parser: Parser;
-
-    beforeEach(() => {
-        
-    });
+describe('Parser tests', () => {    
 
     it('clean input array', () => {
         let dirtyArray = [
@@ -20,7 +15,7 @@ describe('Parser tests', () => {
             "D;JMP"
         ];
 
-        let parser = new Parser('');
+        let parser = new Parser();
 
         let cleanArray = parser.cleanInputFileArray(dirtyArray);
                 
@@ -34,16 +29,16 @@ describe('Parser tests', () => {
 
     it('load input file',() => {
         let filePath = __dirname + '/../../test_corto.asm';        
-        parser = new Parser(filePath);
+        let parser = new Parser();
 
-        ok(parser.loadInputFile());
+        ok(parser.loadInputFile(filePath));
     });
 
     it('there are more commands', () => {
         let filePath = __dirname + '/../../test_corto.asm';        
-        parser = new Parser(filePath);
+        let parser = new Parser();
         
-        ok(parser.loadInputFile());
+        ok(parser.loadInputFile(filePath));
 
         ok(parser.hasMoreCommands(), 'fallo hay más comandos (1)');
         parser.advance();
@@ -59,9 +54,9 @@ describe('Parser tests', () => {
 
     it('get command type', () => {
         let filePath = __dirname + '/../../test.asm';        
-        parser = new Parser(filePath);
+        let parser = new Parser();
         
-        ok(parser.loadInputFile());
+        ok(parser.loadInputFile(filePath));
 
         parser.hasMoreCommands();
         parser.advance();
@@ -92,5 +87,26 @@ describe('Parser tests', () => {
         commandType = parser.commandType();
         ok(commandType == CommandType.L_COMMAND,
         '5) Debería ser ' + CommandType.L_COMMAND + ' pero es ' + commandType)
+    });
+
+    it('get symbol', () => {
+        let filePath = __dirname + '/../../test_multi.asm';        
+        let parser = new Parser();
+        
+        ok(parser.loadInputFile(filePath));
+
+        parser.advance();
+        ok(parser.symbol() == 'i', parser.symbol() + ' debería ser "i"');
+        parser.advance();
+        ok(parser.dest() == 'M', parser.dest() + ' debería ser "M"');
+        ok(parser.comp() == '1', parser.comp() + ' debería ser "1"');
+        parser.advance();
+        ok(parser.jump() == 'JMP', parser.jump() + ' debería ser "JMP"');
+        ok(parser.comp() == '0', parser.comp() + ' debería ser "0"');
+        parser.advance();
+        ok(parser.dest() == 'D', parser.dest() + ' debería ser "D"')
+        ok(parser.jump() == 'JGT', parser.jump() + ' debería ser "JGT"');
+        ok(parser.comp() == '3', parser.comp() + ' debería ser "3"');
+
     });
 });
