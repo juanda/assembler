@@ -66,7 +66,7 @@ describe('Parser tests', function () {
         commandType = parser.commandType();
         assert_1.ok(commandType == Parser_1.CommandType.L_COMMAND, '5) Debería ser ' + Parser_1.CommandType.L_COMMAND + ' pero es ' + commandType);
     });
-    it('get symbol', function () {
+    it('get symbol, dest, comp, jump', function () {
         var filePath = __dirname + '/../../test_multi.asm';
         var parser = new Parser_1.Parser();
         assert_1.ok(parser.loadInputFile(filePath));

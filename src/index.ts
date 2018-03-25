@@ -16,13 +16,13 @@ while (p.hasMoreCommands()) {
     let code = "";
     switch (commandType) {
         case CommandType.A_COMMAND:
-            code = "0" + u.getBinary(p.symbol());
+            code = "0" + c.address(p.symbol());
             break;
         case CommandType.L_COMMAND:
 
             break;
         case CommandType.C_COMMAND:
-            code = "111" + c.dest(p.dest()) + c.comp(p.comp()) + c.jump(p.jump());
+            code = "111" + c.comp(p.comp()) + c.dest(p.dest()) + c.jump(p.jump());
             break;
         default:
     }

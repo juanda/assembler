@@ -1,3 +1,5 @@
+import { Util } from "./Util";
+
 export class Code {
 
     dest(mnemonic: string): string {
@@ -19,18 +21,18 @@ export class Code {
     comp(mnemonic: string): string {
 
         let comps = {
-            "0":   "0101010",
-            "1":   "0111111",
-            "-1":  "0111010",
-            "D":   "0001100",
-            "A":   "0110000",
-            "M":   "1110000",
-            "!D":  "0001101",
-            "!A":  "0110011",
-            "!M":  "1110011",
-            "-D":  "0001111",
-            "-A":  "0110011",
-            "-M":  "1110011",
+            "0": "0101010",
+            "1": "0111111",
+            "-1": "0111010",
+            "D": "0001100",
+            "A": "0110000",
+            "M": "1110000",
+            "!D": "0001101",
+            "!A": "0110001",
+            "!M": "1110001",
+            "-D": "0001111",
+            "-A": "0110011",
+            "-M": "1110011",
             "D+1": "0011111",
             "A+1": "0110111",
             "M+1": "1110111",
@@ -65,5 +67,10 @@ export class Code {
         };
 
         return jumps[mnemonic];
+    }
+
+    address(mnemonic: string): string {
+        let u = new Util();
+        return u.getBinary(mnemonic);
     }
 }

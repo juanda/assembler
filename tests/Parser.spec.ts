@@ -89,7 +89,7 @@ describe('Parser tests', () => {
         '5) Debería ser ' + CommandType.L_COMMAND + ' pero es ' + commandType)
     });
 
-    it('get symbol', () => {
+    it('get symbol, dest, comp, jump', () => {
         let filePath = __dirname + '/../../test_multi.asm';        
         let parser = new Parser();
         
