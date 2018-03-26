@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { ESPIPE } from 'constants';
 
 export enum CommandType {
@@ -75,9 +75,9 @@ export class Parser {
     dest(): string {
         let op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
         let splitted = this.currentCommand.split(op);
-        if(op == "="){
+        if (op == "=") {
             return splitted[0];
-        }else{
+        } else {
             return "";
         }
     }
@@ -86,9 +86,9 @@ export class Parser {
     jump(): string {
         let op = (this.currentCommand.indexOf(";") != -1) ? ";" : "=";
         let splitted = this.currentCommand.split(op);
-        if(op == ";"){            
+        if (op == ";") {
             return splitted.pop();
-        }else{
+        } else {
             return "";
         }
     }
@@ -96,9 +96,9 @@ export class Parser {
     comp(): string {
         let op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
         let splitted = this.currentCommand.split(op);
-        if(op == "="){
+        if (op == "=") {
             return splitted[1].split(";")[0];
-        }else{
+        } else {
             return splitted[0];            
         }
         

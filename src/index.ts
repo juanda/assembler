@@ -1,14 +1,25 @@
 import { writeFileSync } from 'fs';
+import { dirname, basename } from 'path';
 import { Parser, CommandType } from './Parser';
 import { Code } from './Code';
 import { Util } from './Util';
+
+if(process.argv[2] == undefined){
+    console.log("falta el nombre del fichero fuente (asm)");
+    process.exit(1);
+}
+
+let inputFile = process.argv[2];
+let folderName = dirname(inputFile);
+let fileName = basename(inputFile, '.asm');
+let fileOut = folderName + '/' + fileName + '.hack';
 
 var p = new Parser();
 var c = new Code();
 var u = new Util();
 var out: string[] = [];
 
-p.loadInputFile(__dirname + '/../src/prueba.asm');
+p.loadInputFile(inputFile);
 
 while (p.hasMoreCommands()) {
     p.advance();
@@ -37,6 +48,4 @@ out.forEach(element => {
     codeStr += element + "\n";
 });
 
-writeFileSync(__dirname + '/../file.hack', codeStr);
-
-
+writeFileSync(fileOut, codeStr);
