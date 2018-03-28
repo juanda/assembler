@@ -1,6 +1,7 @@
 "use strict";
 exports.__esModule = true;
 var fs_1 = require("fs");
+var Symbol_1 = require("./Symbol");
 var CommandType;
 (function (CommandType) {
     CommandType[CommandType["A_COMMAND"] = 0] = "A_COMMAND";
@@ -10,6 +11,7 @@ var CommandType;
 })(CommandType = exports.CommandType || (exports.CommandType = {}));
 var Parser = /** @class */ (function () {
     function Parser() {
+        this.symbolTable = new Symbol_1.SymbolTable();
     }
     Parser.prototype.cleanInputFileArray = function (dirty) {
         var clean = [];
@@ -84,6 +86,12 @@ var Parser = /** @class */ (function () {
             return "";
         }
     };
+    Parser.prototype.label = function () {
+        var splitted1 = this.currentCommand.split("(");
+        var splitted2 = splitted1[1].split(")");
+        var label = splitted2[0];
+        return label;
+    };
     Parser.prototype.comp = function () {
         var op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
         var splitted = this.currentCommand.split(op);
@@ -93,6 +101,23 @@ var Parser = /** @class */ (function () {
         else {
             return splitted[0];
         }
+    };
+    Parser.prototype.buildSymbolTable = function () {
+        var romAddress = 0;
+        while (this.hasMoreCommands()) {
+            this.advance();
+            var ctype = this.commandType();
+            if (ctype == CommandType.L_COMMAND) {
+                var symbol = this.label();
+                this.symbolTable.addEntry(symbol, romAddress);
+            }
+            else {
+                romAddress++;
+            }
+        }
+    };
+    Parser.prototype.getSymbolTable = function () {
+        return this.symbolTable;
     };
     return Parser;
 }());

@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { ESPIPE } from 'constants';
+import { SymbolTable } from './Symbol';
 
 export enum CommandType {
     A_COMMAND,
@@ -13,7 +13,8 @@ export class Parser {
     private inputFilePath;
     private inputFileArray: string[];
     private currentCommand: string;
-    
+    private symbolTable: SymbolTable = new SymbolTable();
+
     cleanInputFileArray(dirty: string[]): string[] {
         let clean: string[] = [];
         let len = dirty.length;
@@ -93,17 +94,38 @@ export class Parser {
         }
     }
 
+    label(): string {
+        let splitted1 = this.currentCommand.split("(");
+        let splitted2 = splitted1[1].split(")");
+        let label = splitted2[0];
+        return label;
+    }
+
     comp(): string {
         let op = (this.currentCommand.indexOf("=") != -1) ? "=" : ";";
         let splitted = this.currentCommand.split(op);
         if (op == "=") {
             return splitted[1].split(";")[0];
         } else {
-            return splitted[0];            
+            return splitted[0];
         }
-        
     }
 
-    
+    buildSymbolTable() {
+        let romAddress = 0;
+        while (this.hasMoreCommands()) {
+            this.advance();
+            let ctype = this.commandType();
+            if (ctype == CommandType.L_COMMAND) {
+                let symbol = this.label();
+                this.symbolTable.addEntry(symbol, romAddress);
+            } else {
+                romAddress++;
+            }
+        }
+    }
 
+    getSymbolTable(): SymbolTable{
+        return this.symbolTable;
+    }
 }

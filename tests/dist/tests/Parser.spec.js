@@ -85,5 +85,29 @@ describe('Parser tests', function () {
         assert_1.ok(parser.jump() == 'JGT', '9) ' + parser.jump() + ' debería ser "JGT"');
         assert_1.ok(parser.comp() == '3', '10) ' + parser.comp() + ' debería ser "3"');
     });
+    it('get label', function () {
+        var filePath = __dirname + '/../../test.asm';
+        var parser = new Parser_1.Parser();
+        assert_1.ok(parser.loadInputFile(filePath));
+        for (var i = 0; i < 5; i++) {
+            parser.advance();
+        }
+        assert_1.ok(parser.commandType() == Parser_1.CommandType.L_COMMAND);
+        assert_1.ok(parser.label() == "LOOP");
+        for (var i = 0; i < 15; i++) {
+            parser.advance();
+        }
+        assert_1.ok(parser.commandType() == Parser_1.CommandType.L_COMMAND);
+        assert_1.ok(parser.label() == "END");
+    });
+    it('build symbol table', function () {
+        var filePath = __dirname + '/../../test.asm';
+        var parser = new Parser_1.Parser();
+        assert_1.ok(parser.loadInputFile(filePath));
+        parser.buildSymbolTable();
+        var st = parser.getSymbolTable();
+        assert_1.ok(st.getAddress("LOOP") == 4);
+        assert_1.ok(st.getAddress("END") == 18);
+    });
 });
 //# sourceMappingURL=Parser.spec.js.map

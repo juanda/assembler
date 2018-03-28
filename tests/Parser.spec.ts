@@ -1,8 +1,8 @@
 // import {assert} from 'assert';
-import {ok} from 'assert'
+import { ok } from 'assert'
 import { Parser, CommandType } from '../src/Parser';
 
-describe('Parser tests', () => {    
+describe('Parser tests', () => {
 
     it('clean input array', () => {
         let dirtyArray = [
@@ -18,7 +18,7 @@ describe('Parser tests', () => {
         let parser = new Parser();
 
         let cleanArray = parser.cleanInputFileArray(dirtyArray);
-                
+
         ok(cleanArray.pop(), "@sum");
         ok(cleanArray.pop(), "D=M");
         ok(cleanArray.pop(), "(LOOP)")
@@ -27,17 +27,17 @@ describe('Parser tests', () => {
 
     });
 
-    it('load input file',() => {
-        let filePath = __dirname + '/../../test_corto.asm';        
+    it('load input file', () => {
+        let filePath = __dirname + '/../../test_corto.asm';
         let parser = new Parser();
 
         ok(parser.loadInputFile(filePath));
     });
 
     it('there are more commands', () => {
-        let filePath = __dirname + '/../../test_corto.asm';        
+        let filePath = __dirname + '/../../test_corto.asm';
         let parser = new Parser();
-        
+
         ok(parser.loadInputFile(filePath));
 
         ok(parser.hasMoreCommands(), 'fallo hay más comandos (1)');
@@ -49,13 +49,13 @@ describe('Parser tests', () => {
         ok(parser.hasMoreCommands(), 'fallo hay más comandos (4)');
         parser.advance();
         ok(!parser.hasMoreCommands(), 'fallo no más comandos (5)');
-        
+
     });
 
     it('get command type', () => {
-        let filePath = __dirname + '/../../test.asm';        
+        let filePath = __dirname + '/../../test.asm';
         let parser = new Parser();
-        
+
         ok(parser.loadInputFile(filePath));
 
         parser.hasMoreCommands();
@@ -68,31 +68,31 @@ describe('Parser tests', () => {
         parser.advance();
         commandType = parser.commandType();
         ok(commandType == CommandType.C_COMMAND,
-        '2) Debería ser ' + CommandType.C_COMMAND + ' pero es ' + commandType)
+            '2) Debería ser ' + CommandType.C_COMMAND + ' pero es ' + commandType)
 
         parser.hasMoreCommands();
         parser.advance();
         commandType = parser.commandType();
         ok(commandType == CommandType.A_COMMAND,
-        '3) Debería ser ' + CommandType.A_COMMAND + ' pero es ' + commandType )
+            '3) Debería ser ' + CommandType.A_COMMAND + ' pero es ' + commandType)
 
         parser.hasMoreCommands();
         parser.advance();
         commandType = parser.commandType();
         ok(commandType == CommandType.C_COMMAND,
-        '4) Debería ser ' + CommandType.C_COMMAND + ' pero es ' + commandType)
+            '4) Debería ser ' + CommandType.C_COMMAND + ' pero es ' + commandType)
 
         parser.hasMoreCommands();
         parser.advance();
         commandType = parser.commandType();
         ok(commandType == CommandType.L_COMMAND,
-        '5) Debería ser ' + CommandType.L_COMMAND + ' pero es ' + commandType)
+            '5) Debería ser ' + CommandType.L_COMMAND + ' pero es ' + commandType)
     });
 
     it('get symbol, dest, comp, jump', () => {
-        let filePath = __dirname + '/../../test_multi.asm';        
+        let filePath = __dirname + '/../../test_multi.asm';
         let parser = new Parser();
-        
+
         ok(parser.loadInputFile(filePath));
 
         parser.advance();
@@ -110,5 +110,41 @@ describe('Parser tests', () => {
         ok(parser.jump() == 'JGT', '9) ' + parser.jump() + ' debería ser "JGT"');
         ok(parser.comp() == '3', '10) ' + parser.comp() + ' debería ser "3"');
 
+    });
+
+    it('get label', () => {
+        let filePath = __dirname + '/../../test.asm';
+        let parser = new Parser();
+
+        ok(parser.loadInputFile(filePath));
+
+        for(let i = 0; i < 5 ; i ++){
+            parser.advance();
+        }
+
+        ok(parser.commandType() == CommandType.L_COMMAND);
+        ok(parser.label() == "LOOP");
+
+        for(let i = 0; i < 15 ; i ++){
+            parser.advance();
+        }
+
+        ok(parser.commandType() == CommandType.L_COMMAND);
+        ok(parser.label() == "END");
+
+    });
+
+    it('build symbol table', () => {
+        let filePath = __dirname + '/../../test.asm';
+        let parser = new Parser();
+
+        ok(parser.loadInputFile(filePath));
+
+        parser.buildSymbolTable();
+
+        let st = parser.getSymbolTable();
+
+        ok(st.getAddress("LOOP") == 4);
+        ok(st.getAddress("END") == 18);
     });
 });
