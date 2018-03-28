@@ -102,7 +102,7 @@ var Parser = /** @class */ (function () {
             return splitted[0];
         }
     };
-    Parser.prototype.buildSymbolTable = function () {
+    Parser.prototype.buildSymbolTablePass1 = function () {
         var romAddress = 0;
         while (this.hasMoreCommands()) {
             this.advance();
@@ -113,6 +113,28 @@ var Parser = /** @class */ (function () {
             }
             else {
                 romAddress++;
+            }
+        }
+    };
+    Parser.prototype.buildSymbolTablePass2 = function () {
+        var ramAddress = 0;
+        var i = 0;
+        while (this.hasMoreCommands()) {
+            this.advance();
+            var ctype = this.commandType();
+            var symbol = this.symbol();
+            if (ctype == CommandType.A_COMMAND && isNaN(parseInt(symbol))) {
+                // Si la tabla de símbolos contiene la etiqueta, se sustituye
+                if (this.symbolTable.contains(symbol)) {
+                    this.inputFileArray[i] = '@' +
+                        this.symbolTable.getAddress(symbol);
+                    // si no es una variable y hay que alojarla en el siguiente lugar
+                    // libre.
+                }
+                else {
+                    this.inputFileArray[i] = '@' + ramAddress.toString();
+                    ramAddress++;
+                }
             }
         }
     };

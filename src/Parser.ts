@@ -111,7 +111,7 @@ export class Parser {
         }
     }
 
-    buildSymbolTable() {
+    buildSymbolTablePass1() {
         let romAddress = 0;
         while (this.hasMoreCommands()) {
             this.advance();
@@ -125,7 +125,29 @@ export class Parser {
         }
     }
 
-    getSymbolTable(): SymbolTable{
+    buildSymbolTablePass2() {
+        let ramAddress = 0;
+        let i = 0;
+        while (this.hasMoreCommands()) {
+            this.advance();
+            let ctype = this.commandType();
+            let symbol = this.symbol();
+            if (ctype == CommandType.A_COMMAND && isNaN(parseInt(symbol))) {
+                // Si la tabla de símbolos contiene la etiqueta, se sustituye
+                if (this.symbolTable.contains(symbol)) {
+                    this.inputFileArray[i] = '@' +
+                        this.symbolTable.getAddress(symbol);
+                    // si no es una variable y hay que alojarla en el siguiente lugar
+                    // libre.
+                } else {
+                    this.inputFileArray[i] = '@' + ramAddress.toString();
+                    ramAddress++;
+                }
+            }
+        }
+    }
+
+    getSymbolTable(): SymbolTable {
         return this.symbolTable;
     }
 }

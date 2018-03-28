@@ -1,6 +1,7 @@
 // import {assert} from 'assert';
 import { ok } from 'assert'
 import { Parser, CommandType } from '../src/Parser';
+import { parse } from 'path';
 
 describe('Parser tests', () => {
 
@@ -140,11 +141,19 @@ describe('Parser tests', () => {
 
         ok(parser.loadInputFile(filePath));
 
-        parser.buildSymbolTable();
+        parser.buildSymbolTablePass1();
 
         let st = parser.getSymbolTable();
 
         ok(st.getAddress("LOOP") == 4);
         ok(st.getAddress("END") == 18);
+
+        parser.buildSymbolTablePass2();
+
+        parser.advance();
+        ok(parser.symbol() == '@0');
+        parser.advance();
+        parser.advance();
+        ok(parser.symbol() == '@1');
     });
 });

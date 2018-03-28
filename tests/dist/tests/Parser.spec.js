@@ -104,10 +104,16 @@ describe('Parser tests', function () {
         var filePath = __dirname + '/../../test.asm';
         var parser = new Parser_1.Parser();
         assert_1.ok(parser.loadInputFile(filePath));
-        parser.buildSymbolTable();
+        parser.buildSymbolTablePass1();
         var st = parser.getSymbolTable();
         assert_1.ok(st.getAddress("LOOP") == 4);
         assert_1.ok(st.getAddress("END") == 18);
+        parser.buildSymbolTablePass2();
+        parser.advance();
+        assert_1.ok(parser.symbol() == '@0');
+        parser.advance();
+        parser.advance();
+        assert_1.ok(parser.symbol() == '@1');
     });
 });
 //# sourceMappingURL=Parser.spec.js.map
