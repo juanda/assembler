@@ -12,6 +12,7 @@ export class Parser {
 
     private inputFilePath;
     private inputFileArray: string[];
+    private inputFileArrayBackup: string[];
     private currentCommand: string;
     private symbolTable: SymbolTable = new SymbolTable();
 
@@ -38,6 +39,7 @@ export class Parser {
         let buffer: string = readFileSync(this.inputFilePath, { encoding: 'utf8' });
         let inDirtyFileArray = buffer.split("\n");
         this.inputFileArray = this.cleanInputFileArray(inDirtyFileArray);
+        this.inputFileArrayBackup = this.inputFileArray.slice(0);
         return true;
     }
 
@@ -123,11 +125,13 @@ export class Parser {
                 romAddress++;
             }
         }
+
+        this.inputFileArray = this.inputFileArrayBackup.slice(0);
     }
 
     buildSymbolTablePass2() {
         let ramAddress = 0;
-        let i = 0;
+        let i = this.inputFileArrayBackup.length - 1;
         while (this.hasMoreCommands()) {
             this.advance();
             let ctype = this.commandType();
@@ -135,16 +139,19 @@ export class Parser {
             if (ctype == CommandType.A_COMMAND && isNaN(parseInt(symbol))) {
                 // Si la tabla de símbolos contiene la etiqueta, se sustituye
                 if (this.symbolTable.contains(symbol)) {
-                    this.inputFileArray[i] = '@' +
+                    this.inputFileArrayBackup[i] = '@' +
                         this.symbolTable.getAddress(symbol);
                     // si no es una variable y hay que alojarla en el siguiente lugar
                     // libre.
                 } else {
-                    this.inputFileArray[i] = '@' + ramAddress.toString();
+                    this.symbolTable.addEntry(symbol, ramAddress);
+                    this.inputFileArrayBackup[i] = '@' + ramAddress.toString();
                     ramAddress++;
                 }
             }
+            i--;
         }
+        this.inputFileArray = this.inputFileArrayBackup.slice(0);
     }
 
     getSymbolTable(): SymbolTable {

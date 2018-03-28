@@ -151,9 +151,9 @@ describe('Parser tests', () => {
         parser.buildSymbolTablePass2();
 
         parser.advance();
-        ok(parser.symbol() == '@0');
+        ok(parser.symbol() == '0', "1)");
         parser.advance();
         parser.advance();
-        ok(parser.symbol() == '@1');
+        ok(parser.symbol() == '1', "2)");
     });
 });

@@ -110,10 +110,10 @@ describe('Parser tests', function () {
         assert_1.ok(st.getAddress("END") == 18);
         parser.buildSymbolTablePass2();
         parser.advance();
-        assert_1.ok(parser.symbol() == '@0');
+        assert_1.ok(parser.symbol() == '0', "1)");
         parser.advance();
         parser.advance();
-        assert_1.ok(parser.symbol() == '@1');
+        assert_1.ok(parser.symbol() == '1', "2)");
     });
 });
 //# sourceMappingURL=Parser.spec.js.map
