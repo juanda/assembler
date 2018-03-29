@@ -119,7 +119,7 @@ var Parser = /** @class */ (function () {
         this.inputFileArray = this.inputFileArrayBackup.slice(0);
     };
     Parser.prototype.buildSymbolTablePass2 = function () {
-        var ramAddress = 0;
+        var ramAddress = this.symbolTable.getNextFreeMemoryAddress();
         var i = this.inputFileArrayBackup.length - 1;
         while (this.hasMoreCommands()) {
             this.advance();
@@ -138,6 +138,9 @@ var Parser = /** @class */ (function () {
                     this.inputFileArrayBackup[i] = '@' + ramAddress.toString();
                     ramAddress++;
                 }
+            }
+            if (ctype == CommandType.L_COMMAND) {
+                this.inputFileArrayBackup.splice(i, 1);
             }
             i--;
         }

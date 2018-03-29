@@ -20,6 +20,8 @@ var u = new Util();
 var out: string[] = [];
 
 p.loadInputFile(inputFile);
+p.buildSymbolTablePass1();
+p.buildSymbolTablePass2();
 
 while (p.hasMoreCommands()) {
     p.advance();

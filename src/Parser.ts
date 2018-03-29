@@ -14,7 +14,11 @@ export class Parser {
     private inputFileArray: string[];
     private inputFileArrayBackup: string[];
     private currentCommand: string;
-    private symbolTable: SymbolTable = new SymbolTable();
+    private symbolTable: SymbolTable;
+
+    constructor() {
+        this.symbolTable = new SymbolTable();
+    }
 
     cleanInputFileArray(dirty: string[]): string[] {
         let clean: string[] = [];
@@ -125,12 +129,11 @@ export class Parser {
                 romAddress++;
             }
         }
-
         this.inputFileArray = this.inputFileArrayBackup.slice(0);
     }
 
     buildSymbolTablePass2() {
-        let ramAddress = 0;
+        let ramAddress = this.symbolTable.getNextFreeMemoryAddress();
         let i = this.inputFileArrayBackup.length - 1;
         while (this.hasMoreCommands()) {
             this.advance();
@@ -149,7 +152,11 @@ export class Parser {
                     ramAddress++;
                 }
             }
+            if(ctype == CommandType.L_COMMAND){
+                this.inputFileArrayBackup.splice(i,1);
+            }
             i--;
+            
         }
         this.inputFileArray = this.inputFileArrayBackup.slice(0);
     }

@@ -106,14 +106,17 @@ describe('Parser tests', function () {
         assert_1.ok(parser.loadInputFile(filePath));
         parser.buildSymbolTablePass1();
         var st = parser.getSymbolTable();
-        assert_1.ok(st.getAddress("LOOP") == 4);
-        assert_1.ok(st.getAddress("END") == 18);
+        assert_1.ok(st.getAddress("LOOP") == 4, "(1)");
+        assert_1.ok(st.getAddress("END") == 18, "(2)");
         parser.buildSymbolTablePass2();
         parser.advance();
-        assert_1.ok(parser.symbol() == '0', "1)");
+        assert_1.ok(parser.symbol() == '16', "(3)");
         parser.advance();
         parser.advance();
-        assert_1.ok(parser.symbol() == '1', "2)");
+        assert_1.ok(parser.symbol() == '17', "(4)");
+        parser.advance();
+        parser.advance();
+        assert_1.ok(parser.symbol() == '16', "(5)");
     });
 });
 //# sourceMappingURL=Parser.spec.js.map

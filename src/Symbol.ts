@@ -1,6 +1,7 @@
 export class SymbolTable {
 
     private st: { [key: string]: number; } = {};
+    private nextFreeAddressMemory: number
 
     constructor() {
         this.st["SP"] = 0;
@@ -26,6 +27,12 @@ export class SymbolTable {
         this.st["R15"] = 15;
         this.st["SCREEN"] = 16384;
         this.st["KBD"] = 24576
+
+        this.nextFreeAddressMemory = 16;
+    }
+
+    getNextFreeMemoryAddress(){
+        return this.nextFreeAddressMemory;
     }
 
     addEntry(symbol: string, address: number){

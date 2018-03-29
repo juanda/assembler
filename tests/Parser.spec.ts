@@ -145,15 +145,18 @@ describe('Parser tests', () => {
 
         let st = parser.getSymbolTable();
 
-        ok(st.getAddress("LOOP") == 4);
-        ok(st.getAddress("END") == 18);
+        ok(st.getAddress("LOOP") == 4, "(1)");
+        ok(st.getAddress("END") == 18, "(2)");
 
         parser.buildSymbolTablePass2();
 
         parser.advance();
-        ok(parser.symbol() == '0', "1)");
+        ok(parser.symbol() == '16', "(3)");
         parser.advance();
         parser.advance();
-        ok(parser.symbol() == '1', "2)");
+        ok(parser.symbol() == '17', "(4)");
+        parser.advance();
+        parser.advance();
+        ok(parser.symbol() == '16', "(5)");
     });
 });
