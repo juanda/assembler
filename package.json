@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js",
+    "start": "tsc && node dist/index.js test.asm",
     "test": "tsc tests/*.ts --sourcemap --outDir tests/dist && mocha tests/dist/**/*.spec.js",
     "build": "tsc"
   },
